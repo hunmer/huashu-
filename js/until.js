@@ -1,6 +1,6 @@
 const APP_VERSION = 'v0.0.1';
 // const UPDATE_SCRIPT_URL = 'https://gitee.com/neysummer2000/VideoManager/raw/main/';
-var g_localKey = 'vp_';
+var g_localKey = 'hs1_';
 var g_config = local_readJson('config', {
     fontSize: '20',
 });

@@ -13,20 +13,14 @@
     padding:  5px;
 }
 
+#sideIcons .bi {
+        font-size: 1.5rem;
+}
+
 i {
     cursor: pointer;
 }
 
-#icons {
-    height: 100vh;
-}
-
-#icons div {
-    height:  50%;
-}
-#icons bi {
-        font-size: 6rem;
-}
 
 #ftb {
     position: fixed;
