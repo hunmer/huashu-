@@ -1,4 +1,5 @@
 const g_list = {
+	mode: 'signal',
 	init: function(){
 		let self = this;
 		this.data = local_readJson('list', {
@@ -33,13 +34,13 @@ const g_list = {
 				text: '今天只限在我的直播间有这个价格，站外都没有这个价格',
 			},
 			11: {
-				text: '今天的优惠数量有限，只有200个,只有200个，抢完为止，抢完为止',
+				text: '今天的优惠数量有限，只有{数量}个,只有{数量}个，抢完为止，抢完为止',
 			},
 			12: {
 				text: '欢迎进来的朋友，不要着急马上走，点点关注不迷路，主播带你上高速。',
 			},
 			13: {
-				text: '给你们包邮送到家，9.9连运费都不够了',
+				text: '给你们包邮送到家，{价格}连运费都不够了',
 			},
 			14: {
 				text: '抢到的扣抢到需要加急的，点关注扣加急，优先安排给你们打包。优先发货！',
@@ -57,49 +58,10 @@ const g_list = {
 				text: '这款产品数量有限，如果看中了一定要及时下单，不然等会儿就抢不到了哦。',
 			},
 			19: {
-				text: '抢到就是赚到、秒杀单品数量有限，先付先得、最后2分钟！最后2分钟!',
+				text: '抢到就是赚到、单品数量有限，先付先得、最后2分钟！最后2分钟!',
 			},
 			20: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
-			},
-			1: {
-				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
+				text: '有喜欢___,可以点点小黄车链接',
 			},
 			1: {
 				text: '欢迎所有刚进直播间的宝宝，看一下下方小黄车链接!',
@@ -127,6 +89,16 @@ const g_list = {
 						let name = $('#modal_list li.active').data('tag');
 						if(!isEmpty(name)){
 							g_list.tag_load(name);
+							confirm('是否连接文本？', {
+								callback: id => {
+									if(id == 'ok'){
+										this.concat_item();
+									}else{
+										this.mode = 'signal';
+										this.next();
+									}
+								}
+							})
 						}
 					}
 				}
@@ -140,7 +112,7 @@ const g_list = {
 			$(dom).addClass(action[1]);
 		})
 		g_list.load();
-		g_list.tag_load('a');
+		// g_list.tag_load('a');
 		// doAction(null, 'list')
 	},
 
@@ -163,7 +135,6 @@ const g_list = {
 		this.current = tag;
 		this.currentList = this.tag_keys(tag);
 		this.nextTick = 0;
-		this.next();
 		/*clearInterval(this.timer);
 		this.timer = setInterval(() => {
 			let progress = ++this.nextTick / 5 * 100
@@ -175,9 +146,23 @@ const g_list = {
 	},
 
 	next: function(){
-		this.nextTick = 0;
-		let i = randNum(0, this.currentList.length - 1);
-		this.show_item(this.currentList[i])
+		// this.nextTick = 0;
+		if(this.mode == 'signal'){
+			let i = randNum(0, this.currentList.length - 1);
+			this.show_item(this.currentList[i])
+		}else{
+			this.concat_item();
+		}
+	},
+
+	concat_item: function(){
+		this.mode = 'concat';
+		let s = '';
+		let keys = [].concat(this.currentList);
+		for(id of keys.sort((a, b) => Math.random() > 0.5 ? -1 : 1)){
+			s += this.data[id].text + ' '
+		}
+		$('h1').html(s);
 	},
 
 	show_item: function(id){
